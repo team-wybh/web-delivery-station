@@ -2,14 +2,16 @@ import Footer from 'layouts/\bfooter';
 import Header from 'layouts/header';
 import * as Style from './styles';
 
-const HomeTemplate = () => {
+function HomeTemplate() {
   return (
-    <Style.Wrap>
-      <Header />
-      <Style.Container></Style.Container>
-      <Footer />
-    </Style.Wrap>
+    <Style.Main>
+      <Style.Wrap>
+        <Header />
+        <Style.Container />
+        <Footer />
+      </Style.Wrap>
+    </Style.Main>
   );
-};
+}
 
 export default HomeTemplate;

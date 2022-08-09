@@ -1,11 +1,15 @@
-import { theme } from './../../styles/theme';
 import styled from 'styled-components';
 
-export const Wrap = styled.section`
+export const Main = styled.section`
+  background: ${props => props.theme.colors.darkBlue1};
+`;
+
+export const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: ${({ theme }) => theme.color.darkBlue1};
+  max-width: 768px;
+  margin: 0 auto;
 `;
 
 export const Container = styled.div`
