@@ -7,7 +7,7 @@ export interface HomeContextType {
 }
 
 export const initialState = {
-  place: '여의도',
+  place: '잠원',
   isListView: false
 };
 

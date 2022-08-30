@@ -7,7 +7,7 @@ export const Wrap = styled.div`
     width: 100%;
   }
 
-  .swiper-slide {
+  .swiper-slide {z
     display: flex;
     justify-content: center;
   }
