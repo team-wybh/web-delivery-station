@@ -1,17 +1,20 @@
 import styled from 'styled-components';
 
-export const Main = styled.section`
-  background: ${props => props.theme.colors.darkBlue1};
-`;
-
-export const Wrap = styled.div`
-  display: flex;
-  flex-direction: column;
+export const Map = styled.section`
+  position: relative;
+  width: 100%;
   height: 100vh;
-  max-width: 768px;
-  margin: 0 auto;
 `;
 
-export const Container = styled.div`
-  flex: 1;
+export const Header = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  padding: 24px 16px;
 `;

@@ -1,13 +1,12 @@
 import styled from 'styled-components';
 
 export const Wrap = styled.div`
+  margin-top: 50px;
   .swiper {
     display: flex;
     justify-content: center;
-    width: 100%;
   }
-
-  .swiper-slide {z
+  .swiper-slide {
     display: flex;
     justify-content: center;
   }

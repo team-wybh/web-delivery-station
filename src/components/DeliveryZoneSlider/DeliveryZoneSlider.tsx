@@ -2,8 +2,9 @@ import React, { useContext } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { A11y } from 'swiper';
 import { useNavigate } from 'react-router-dom';
-import { HomeStateContext } from '../../template/home/HomeContext';
+import { HomeDispatchContext, HomeStateContext } from '../../template/home/HomeContext';
 import * as Styles from './stlyes';
+import { SET_ZONE } from '../../template/home/HomeReducer';
 
 interface DeliveryZoneSliderProps {
   items: any[];
@@ -11,35 +12,39 @@ interface DeliveryZoneSliderProps {
 
 function DeliveryZoneSlider({ items }: DeliveryZoneSliderProps) {
   const { place } = useContext(HomeStateContext);
+  const dispatch = useContext(HomeDispatchContext);
   const filterPlaces = items.filter(item => item.title === place);
   const deliveryZones = filterPlaces[0].places;
   const navigate = useNavigate();
-  const handleOnclick = () => {
-    navigate('/map', { state: place })
-  }
+
+  const handleOnclick = (currentZone: any) => {
+    navigate('/map', { state: place });
+    dispatch({ type: SET_ZONE, currentZone });
+  };
+
   return (
-    <Swiper
-      modules={[A11y]}
-      slidesPerView={3}
-      centeredSlides={deliveryZones.length < 2}
-      freeMode
-    >
-      {deliveryZones.map((zone: any) => {
-        return (
-          <Styles.Wrap>
-            <SwiperSlide>
-              <Styles.ZoneItem>
+    <Styles.Wrap>
+      <Swiper
+        modules={[A11y]}
+        slidesPerView={1}
+      >
+        {deliveryZones.map((zone: any) => {
+          return (
+            <SwiperSlide key={zone.title}>
+              <Styles.ZoneItem onClick={() => handleOnclick(zone)}>
                 <img src={zone.image} alt='캐릭터 이미지' />
-                <Styles.Text>
-                  {zone.text}
-                  <button type='button' onClick={handleOnclick}>1</button>
-                </Styles.Text>
+                <Styles.TextBox>
+                  <Styles.Text>
+                    {zone.text}
+                  </Styles.Text>
+                  <Styles.Button type='button'>배달존 찾기</Styles.Button>
+                </Styles.TextBox>
               </Styles.ZoneItem>
             </SwiperSlide>
-          </Styles.Wrap>
-        );
-      })}
-    </Swiper>
+          );
+        })}
+      </Swiper>
+    </Styles.Wrap>
   );
 }
 

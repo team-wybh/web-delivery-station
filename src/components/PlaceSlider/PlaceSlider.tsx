@@ -19,10 +19,9 @@ function PlaceSlider({ items }: PlaceSliderProps) {
       place
     });
   };
-  console.log(items)
   return (
     <Styles.Wrap>
-      <Swiper modules={[A11y]} slidesPerView={6} centeredSlides freeMode>
+      <Swiper modules={[A11y]} slidesPerView={6}>
         {items.map(item => {
           return (
             <SwiperSlide key={item.title}>
