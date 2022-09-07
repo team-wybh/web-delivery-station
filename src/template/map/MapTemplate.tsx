@@ -79,7 +79,7 @@ function MapTemplate() {
       currentZoneRender(map);
     };
     initMap();
-  }, [currentPlace]);
+  }, [place]);
 
   return (
     <Styles.Map id='map'>
