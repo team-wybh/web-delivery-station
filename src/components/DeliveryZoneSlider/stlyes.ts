@@ -22,6 +22,7 @@ export const TextBox = styled.div`
   background: #141517;
   border-radius: 20px;
 `;
+
 export const Text = styled.p`
   color: ${props => props.theme.colors.white};
   font-weight: 500;
@@ -30,6 +31,7 @@ export const Text = styled.p`
   letter-spacing: -0.02em;
   white-space: pre-wrap;
 `;
+
 export const Button = styled.button`
   margin-top: 14px;
   padding: 6px 10px;

@@ -27,11 +27,13 @@ function DeliveryZoneSlider({ items }: DeliveryZoneSliderProps) {
       <Swiper
         modules={[A11y]}
         slidesPerView={1}
+        freeMode
+
       >
         {deliveryZones.map((zone: any) => {
           return (
-            <SwiperSlide key={zone.title}>
-              <Styles.ZoneItem onClick={() => handleOnclick(zone)}>
+            <SwiperSlide key={zone.title} onClick={() => handleOnclick(zone)}>
+              <Styles.ZoneItem>
                 <img src={zone.image} alt='캐릭터 이미지' />
                 <Styles.TextBox>
                   <Styles.Text>

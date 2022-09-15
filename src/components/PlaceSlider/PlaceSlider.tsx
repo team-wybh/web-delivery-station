@@ -21,11 +21,11 @@ function PlaceSlider({ items }: PlaceSliderProps) {
   };
   return (
     <Styles.Wrap>
-      <Swiper modules={[A11y]} slidesPerView={6}>
+      <Swiper modules={[A11y]} slidesPerView={6} freeMode >
         {items.map(item => {
           return (
-            <SwiperSlide key={item.title}>
-              <Styles.Place active={place === item.title} onClick={() => handlePlaceClick(item.title)}>
+            <SwiperSlide key={item.title} onClick={() => handlePlaceClick(item.title)}>
+              <Styles.Place active={place === item.title}>
                 {item.title}
               </Styles.Place>
             </SwiperSlide>

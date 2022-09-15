@@ -1,12 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ReactComponent as Back } from 'assets/icons/ico_back_40.svg';
 import { ReactComponent as CurrentLocationBtn } from 'assets/icons/ico_btn_currentlocation.svg';
 import { useNavigate } from 'react-router-dom';
-import { HomeStateContext } from '../home/HomeContext';
+import { HomeDispatchContext, HomeStateContext } from '../home/HomeContext';
 import { dummy } from '../../constant';
 import MapTitle from '../../components/MapTItle';
 import * as Styles from './styles';
 import useCurrentLocation from '../../hooks/useCurrentLocation';
+import RecommendedPlace from '../../components/RecommendedPlace';
+import { SET_ZONE } from '../home/HomeReducer';
 
 const geolocationOptions = {
   enableHighAccuracy: true,
@@ -15,31 +17,76 @@ const geolocationOptions = {
 };
 
 function MapTemplate() {
+  const mapRef = useRef<any>(null);
+  const markerRef = useRef<any | null>(null);
+  const [markers, setMarkers] = useState<any[]>([]);
+  const { naver } = window;
   const { location, error } = useCurrentLocation(geolocationOptions);
   const navigate = useNavigate();
-  const { place } = useContext(HomeStateContext);
-  const currentPlace = dummy.filter(item => item.title === place);
-  const currentZone = currentPlace[0].places;
+  const { place, currentZone } = useContext(HomeStateContext);
+  const dispatch = useContext(HomeDispatchContext);
 
-  // 현재 배달존 렌더함수 
-  const currentZoneRender = (map: any) => {
-    currentZone.forEach(item => {
-      const current = new naver.maps.Marker({
-        position: new naver.maps.LatLng(
-          item.latlng.lat,
-          item.latlng.lng
-        ),
-        map,
-        icon: {
-          content: `
-              <img alt='marker' src='/images/marker.svg' />
-            `
-        }
-      });
+  const currentPlace = dummy.filter(item => item.title === place);
+  const deliveryZone = currentPlace[0].places;
+
+  const iconOption = {
+    size: new naver.maps.Size(25, 34),
+    scaledSize: new naver.maps.Size(25, 34),
+    content: `<img alt='marker' src='/images/marker.svg' />`
+  };
+
+  const iconActiveOption = {
+    size: new naver.maps.Size(25, 34),
+    scaledSize: new naver.maps.Size(25, 34),
+    content: `<img alt='marker' src='/images/marker.svg' class='current-marker' />`
+  };
+
+  const markersRender = (currentZone: any) => {
+    markers.forEach((marker: any) => {
+      if (marker.position.x === currentZone.latlng.lng) {
+        marker.setIcon(iconActiveOption);
+      } else {
+        marker.setIcon(iconOption);
+      }
     });
   };
 
+  useEffect(() => {
+    const initMap = () => {
+      mapRef.current = new naver.maps.Map('map', {
+        // 지도 추가, 좌표를 기점으로 주변 지도가 추가된다.
+        center: new naver.maps.LatLng(deliveryZone[0].latlng.lat, deliveryZone[0].latlng.lng),
+        zoom: 15
+      });
+      deliveryZoneRender();
+    };
+    initMap();
+  }, [place]);
+
+  useEffect(() => {
+    if (!markers) return;
+    markersRender(currentZone);
+  }, [markers, currentZone]);
+
+  // 현재 배달존 렌더함수
+  const deliveryZoneRender = () => {
+    const markers: any[] = [];
+    deliveryZone?.forEach(item => {
+      markers.push(new naver.maps.Marker({
+          position: new naver.maps.LatLng(
+            item.latlng.lat,
+            item.latlng.lng
+          ),
+          map: mapRef.current,
+          icon: iconOption
+        })
+      );
+    });
+    setMarkers(markers);
+  };
+
   const handleCurrentLocationClick = () => {
+    if (!mapRef.current) return;
     if (!location) return;
     if (error) {
       alert(error);
@@ -47,39 +94,29 @@ function MapTemplate() {
     }
 
     const { latitude, longitude } = location;
-    const map = new naver.maps.Map('map');
-    map.setCenter(new naver.maps.LatLng(latitude, longitude));
 
-    const currentMarker = new naver.maps.Marker({
+    mapRef.current.setCenter(new naver.maps.LatLng(latitude, longitude));
+    markerRef.current = new naver.maps.Marker({
       position: new naver.maps.LatLng(
         latitude, longitude
       ),
-      map,
+      map: mapRef.current,
       icon: {
-        content: `
-             <img alt='marker' src='/images/ico_currentlocation.svg' />
-            `
+        content: `<img alt = 'marker' src = '/images/ico_currentlocation.svg'/>`
       }
     });
-
-    currentZoneRender(map);
   };
 
   const handleBackClick = () => {
     navigate('/');
   };
 
-  useEffect(() => {
-    const initMap = () => {
-      const map = new naver.maps.Map('map', {
-        // 지도 추가, 좌표를 기점으로 주변 지도가 추가된다.
-        center: new naver.maps.LatLng(currentZone[0].latlng.lat, currentZone[0].latlng.lng),
-        zoom: 15
-      });
-      currentZoneRender(map);
-    };
-    initMap();
-  }, [place]);
+  const handleZoneClick = (currentZone: any) => {
+    if (!mapRef.current) return;
+    if (!currentZone) return;
+    dispatch({ type: SET_ZONE, currentZone });
+    mapRef.current.setCenter(new naver.maps.LatLng(currentZone.latlng.lat, currentZone.latlng.lng));
+  };
 
   return (
     <Styles.Map id='map'>
@@ -88,7 +125,7 @@ function MapTemplate() {
         <MapTitle />
         <CurrentLocationBtn onClick={handleCurrentLocationClick} />
       </Styles.Header>
-
+      <RecommendedPlace items={dummy} handleZoneClick={handleZoneClick} />
     </Styles.Map>
   );
 }

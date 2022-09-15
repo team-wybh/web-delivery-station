@@ -17,10 +17,12 @@ interface PlaceProps {
 }
 
 export const Place = styled.button<PlaceProps>`
+  display: block;
   width: 52px;
   height: 52px;
-  //background: transparent;
   border: 0;
+  margin: 0;
+  padding: 0;
   border-radius: 50%;
   background: ${props => (props.active ? props.theme.colors.green : 'transparent')};
   font-weight: ${props => (props.active ? 700 : 400)};

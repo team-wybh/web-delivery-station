@@ -22,7 +22,7 @@ export const reducer = (state: HomeContextType, action: Action) => {
         ...state,
         isListView: action.isListView
       };
-    case 'SET_ZONE':
+    case SET_ZONE:
       return {
         ...state,
         currentZone: action.currentZone
