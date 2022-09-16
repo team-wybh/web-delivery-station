@@ -35,13 +35,15 @@ function MapTemplate() {
     content: `<img alt='marker' src='/images/marker.svg' />`
   };
 
-  const iconActiveOption = {
-    size: new naver.maps.Size(25, 34),
-    scaledSize: new naver.maps.Size(25, 34),
-    content: `<img alt='marker' src='/images/marker.svg' class='current-marker' />`
-  };
-
   const markersRender = (currentZone: any) => {
+    const iconActiveOption = {
+      size: new naver.maps.Size(25, 34),
+      scaledSize: new naver.maps.Size(25, 34),
+      content: `<div class='marker-wrap'>
+                  <div class='marker-title'>${currentZone.title}</div><img alt='marker' src='/images/marker.svg' class='current-marker' />
+                </div>`
+    };
+
     markers.forEach((marker: any) => {
       if (marker.position.x === currentZone.latlng.lng) {
         marker.setIcon(iconActiveOption);

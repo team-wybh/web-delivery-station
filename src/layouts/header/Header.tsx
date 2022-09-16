@@ -10,13 +10,13 @@ function Header() {
   const { isListView } = useContext(HomeStateContext);
   const dispatch = useContext(HomeDispatchContext);
 
-  const handleButtonClick = () => {
-    dispatch({ type: SET_IS_LIST_VIEW, isListView: !isListView });
-  };
+  // const handleButtonClick = () => {
+  //   dispatch({ type: SET_IS_LIST_VIEW, isListView: !isListView });
+  // };
   return (
     <Styles.Header>
       <Logo />
-      <Styles.Button onClick={handleButtonClick}>{isListView ? <Card /> : <List />}</Styles.Button>
+      {/* <Styles.Button onClick={handleButtonClick}>{isListView ? <Card /> : <List />}</Styles.Button> */}
     </Styles.Header>
   );
 }

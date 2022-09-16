@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { A11y } from 'swiper';
+import { ReactComponent as CopyDark } from 'assets/icons/ico_copy_dark.svg';
+import { ReactComponent as CopyWhite } from 'assets/icons/ico_copy_white.svg';
+import { HomeStateContext } from '../../template/home/HomeContext';
 import * as Styles from './styles';
-import { HomeDispatchContext, HomeStateContext } from '../../template/home/HomeContext';
-import { SET_ZONE } from '../../template/home/HomeReducer';
 
 interface RecommendedPlaceProps {
   items: any[];
@@ -17,6 +18,18 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
   const deliveryZones = filterPlaces[0].places;
   const deliveryZoneLength = filterPlaces[0].places.length;
 
+  const handleButtonClick = (active: boolean) => {
+    if (!active) return;
+    const isNaver = window.confirm('배달존 위치 찾기를 위해 네이버 지도를 여시겠습니까?');
+    if (!isNaver) return;
+    const url = `https://m.map.naver.com/map.naver?lat=${currentZone.latlng.lat}&lng=${currentZone.latlng.lng}&dlevel=12&mapMode=&pinTitle=&boundary=&traffic=#`;
+    window.open(url);
+  };
+
+  const handleCopyClick = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    alert('복사가 완료 되었어요!');
+  };
   return (
     <Styles.Wrap>
       <Styles.Header>
@@ -32,17 +45,28 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
         >
           {deliveryZones.map((zone: any) => {
             return (
-              <SwiperSlide key={zone.title} onClick={()=> handleZoneClick(zone)}>
+              <SwiperSlide key={zone.title} onClick={() => handleZoneClick(zone)}>
                 <Styles.Zone active={currentZone.title === zone.title}>
-                  <Styles.Title>
-                    {zone.title}
-                  </Styles.Title>
-                  <Styles.Address>
-                    {zone.address}
-                  </Styles.Address>
-                  <Styles.Text>
-                    {zone.description}
-                  </Styles.Text>
+                  <div>
+                    <Styles.Title>
+                      {zone.title}
+                    </Styles.Title>
+                    <Styles.AddressWrap>
+                      <Styles.Address>
+                        {zone.address}
+                      </Styles.Address>
+                      <Styles.CopyButton onClick={() => handleCopyClick(zone.address)}>
+                        {currentZone.title === zone.title ? <CopyDark /> : <CopyWhite />}
+                      </Styles.CopyButton>
+                    </Styles.AddressWrap>
+                    <Styles.Text>
+                      {zone.description}
+                    </Styles.Text>
+                  </div>
+                  <Styles.Button type='button' active={currentZone.title === zone.title}
+                                 onClick={() => handleButtonClick(currentZone.title === zone.title)}>
+                    도착
+                  </Styles.Button>
                 </Styles.Zone>
               </SwiperSlide>
             );
