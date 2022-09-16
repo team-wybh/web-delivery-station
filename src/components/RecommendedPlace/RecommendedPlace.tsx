@@ -53,22 +53,20 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
                     <Styles.Title>
                       {zone.title}
                     </Styles.Title>
-                    <Styles.AddressWrap>
-                      <Styles.Address>
-                        {zone.address}
-                      </Styles.Address>
-
-                      <CopyToClipboard text={zone.address} onCopy={handleCopyClick}>
+                    <CopyToClipboard text={zone.address} onCopy={handleCopyClick}>
+                      <Styles.AddressWrap>
+                        <Styles.Address>
+                          {zone.address}
+                        </Styles.Address>
                         <Styles.CopyButton>
                           {currentZone.title === zone.title ? <CopyDark /> : <CopyWhite />}
                         </Styles.CopyButton>
-                      </CopyToClipboard>
-                    </Styles.AddressWrap>
+                      </Styles.AddressWrap>
+                    </CopyToClipboard>
                     <Styles.Text>
                       {zone.description}
                     </Styles.Text>
                   </div>
-
                   <Styles.Button type='button' active={currentZone.title === zone.title}
                                  onClick={() => handleButtonClick(currentZone.title === zone.title)}>
                     도착
