@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { A11y } from 'swiper';
 import { ReactComponent as CopyDark } from 'assets/icons/ico_copy_dark.svg';
@@ -13,7 +14,7 @@ interface RecommendedPlaceProps {
 
 function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
   const { place, currentZone } = useContext(HomeStateContext);
-
+  const [isCopied, setIsCopied] = useState(false);
   const filterPlaces = items.filter(item => item.title === place);
   const deliveryZones = filterPlaces[0].places;
   const deliveryZoneLength = filterPlaces[0].places.length;
@@ -26,8 +27,9 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
     window.open(url);
   };
 
-  const handleCopyClick = async (text: string) => {
-    await navigator.clipboard.writeText(text);
+  const handleCopyClick = () => {
+    setIsCopied(true);
+    if (!isCopied) return;
     alert('복사가 완료 되었어요!');
   };
   return (
@@ -55,14 +57,18 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
                       <Styles.Address>
                         {zone.address}
                       </Styles.Address>
-                      <Styles.CopyButton onClick={() => handleCopyClick(zone.address)}>
-                        {currentZone.title === zone.title ? <CopyDark /> : <CopyWhite />}
-                      </Styles.CopyButton>
+
+                      <CopyToClipboard text={zone.address} onCopy={handleCopyClick}>
+                        <Styles.CopyButton>
+                          {currentZone.title === zone.title ? <CopyDark /> : <CopyWhite />}
+                        </Styles.CopyButton>
+                      </CopyToClipboard>
                     </Styles.AddressWrap>
                     <Styles.Text>
                       {zone.description}
                     </Styles.Text>
                   </div>
+
                   <Styles.Button type='button' active={currentZone.title === zone.title}
                                  onClick={() => handleButtonClick(currentZone.title === zone.title)}>
                     도착
