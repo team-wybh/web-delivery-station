@@ -9,6 +9,7 @@ import * as Styles from './styles';
 import useCurrentLocation from '../../hooks/useCurrentLocation';
 import RecommendedPlace from '../../components/RecommendedPlace';
 import { SET_ZONE } from '../home/HomeReducer';
+import { ANDROID, checkMobile } from '../../utills';
 
 const geolocationOptions = {
   enableHighAccuracy: true,
@@ -88,6 +89,23 @@ function MapTemplate() {
   };
 
   const handleCurrentLocationClick = () => {
+    if(checkMobile()=== ANDROID){
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const {latitude,longitude} = DeliveryZoneAndroid.clickGPSOn()
+      mapRef.current.setCenter(new naver.maps.LatLng(latitude, longitude));
+      markerRef.current = new naver.maps.Marker({
+        position: new naver.maps.LatLng(
+          latitude, longitude
+        ),
+        map: mapRef.current,
+        icon: {
+          content: `<img alt = 'marker' src = '/images/ico_currentlocation.svg'/>`
+        }
+      });
+      return ;
+    }
+
     if (!mapRef.current) return;
     if (!location) return;
     if (error) {

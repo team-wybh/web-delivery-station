@@ -6,6 +6,7 @@ import { ReactComponent as CopyDark } from 'assets/icons/ico_copy_dark.svg';
 import { ReactComponent as CopyWhite } from 'assets/icons/ico_copy_white.svg';
 import { HomeStateContext } from '../../template/home/HomeContext';
 import * as Styles from './styles';
+import { ANDROID, checkMobile } from '../../utills';
 
 interface RecommendedPlaceProps {
   items: any[];
@@ -21,6 +22,13 @@ function RecommendedPlace({ items, handleZoneClick }: RecommendedPlaceProps) {
 
   const handleButtonClick = (active: boolean) => {
     if (!active) return;
+    if(checkMobile() === ANDROID){
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      DeliveryZoneAndroid.openMapApp({latitude: currentZone.latlng.lat, longitude: currentZone.latlng.lng})
+      return;
+    }
+
     const isNaver = window.confirm('배달존 위치 찾기를 위해 네이버 지도를 여시겠습니까?');
     if (!isNaver) return;
     const url = `https://m.map.naver.com/map.naver?lat=${currentZone.latlng.lat}&lng=${currentZone.latlng.lng}&dlevel=12&mapMode=&pinTitle=&boundary=&traffic=#`;
